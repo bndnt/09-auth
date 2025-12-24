@@ -32,6 +32,10 @@ const ProfileEdit = () => {
   });
   async function handleSubmit(formData: FormData) {
     const username = formData.get("username") as string;
+    if (!username) {
+      setError("Username is required");
+      return;
+    }
     setError(null);
     mutate({ username });
   }

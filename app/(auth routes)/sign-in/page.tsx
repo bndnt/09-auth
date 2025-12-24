@@ -4,8 +4,9 @@ import { login } from "@/lib/api/clientApi";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ApiError } from "@/app/api/api";
 import { useAuthStore } from "@/lib/store/authStore";
+import { getApiErrorMessage } from "@/lib/api/errors";
+
 const SignUpPage = () => {
   const setUser = useAuthStore((store) => store.setUser);
   const router = useRouter();
@@ -18,9 +19,7 @@ const SignUpPage = () => {
       router.push("/profile");
     },
     onError: (error) => {
-      setError(
-        (error as ApiError).response?.data?.error ?? (error as ApiError).message
-      );
+      setError(getApiErrorMessage(error));
     },
   });
 

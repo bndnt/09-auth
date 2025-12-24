@@ -5,8 +5,8 @@ import { register } from "@/lib/api/clientApi";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ApiError } from "@/app/api/api";
 import { useAuthStore } from "@/lib/store/authStore";
+import { getApiErrorMessage } from "@/lib/api/errors";
 
 export default function SignUpPage() {
   const setUser = useAuthStore((store) => store.setUser);
@@ -19,16 +19,28 @@ export default function SignUpPage() {
       router.push("/profile");
     },
     onError: (error) => {
-      setError(
-        (error as ApiError).response?.data?.error ?? (error as ApiError).message
-      );
+      setError(getApiErrorMessage(error));
     },
   });
 
   const handleSubmit = (formData: FormData) => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    console.log({ email, password });
+    if (!email || !password) {
+      setError("Email and password are required");
+      return;
+    }
+
+    if (!email.includes("@")) {
+      setError("Invalid email format");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+    setError(null);
     mutate({ email, password });
   };
   return (
