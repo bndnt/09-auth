@@ -1,31 +1,59 @@
 "use client";
-import { checkSession, getMe } from "@/lib/api/clientApi";
-import { useAuthStore } from "@/lib/store/authStore";
-import { useEffect } from "react";
 
-interface AuthProviderProps {
+import { useEffect, useState } from "react";
+import { useAuthStore } from "@/lib/store/authStore";
+import { checkSession, getMe } from "@/lib/api/clientApi";
+import Loader from "@/components/Loader/Loader";
+import type { User } from "@/types/user";
+
+export default function AuthProvider({
+  children,
+}: {
   children: React.ReactNode;
-}
-const AuthProvider = ({ children }: AuthProviderProps) => {
-  const setUser = useAuthStore((state) => state.setUser);
-  const clearIsAuthenticated = useAuthStore(
-    (state) => state.clearIsAuthenticated
-  );
+}) {
+  const { setUser, clearIsAuthenticated } = useAuthStore();
+  const [isChecking, setIsChecking] = useState(true);
+
   useEffect(() => {
-    const fetchUser = async () => {
-      const isAuthenticated = await checkSession();
-      if (isAuthenticated) {
-        const user = await getMe();
-        if (user) {
-          setUser(user);
+    const verifySession = async () => {
+      try {
+        const isValid = await checkSession();
+
+        if (isValid) {
+          const user: User = await getMe();
+
+          setUser({
+            ...user,
+            avatar: user.avatar ?? "",
+          });
+        } else {
+          clearIsAuthenticated();
         }
-      } else {
+      } catch (error) {
+        console.error("AuthProvider verifySession error:", error);
         clearIsAuthenticated();
+      } finally {
+        setIsChecking(false);
       }
     };
-    fetchUser();
-  }, [setUser, clearIsAuthenticated]);
-  return children;
-};
 
-export default AuthProvider;
+    verifySession();
+  }, [setUser, clearIsAuthenticated]);
+
+  if (isChecking) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+        }}
+      >
+        <Loader />
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}

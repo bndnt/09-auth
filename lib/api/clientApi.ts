@@ -25,6 +25,9 @@ export interface RegiterPayload {
 export interface CheckSessionResponse {
   success: boolean;
 }
+export interface UpdateMe {
+  username: string;
+}
 
 export async function fetchNotes(
   page: number,
@@ -100,5 +103,10 @@ export async function checkSession(): Promise<boolean> {
 
 export async function getMe(): Promise<User> {
   const { data } = await serverApi.get<User>("/users/me");
+  return data;
+}
+
+export async function updateMe(payload: UpdateMe): Promise<User> {
+  const { data } = await serverApi.patch<User>("users/me", payload);
   return data;
 }

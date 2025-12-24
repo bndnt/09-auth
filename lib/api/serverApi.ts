@@ -55,10 +55,10 @@ export async function getMeServer() {
 export async function checkSessionServer() {
   const cookieStore = await cookies();
 
-  const { data } = await serverApi.get<CheckSessionResponse>("/auth/session", {
+  const res = await serverApi.get<CheckSessionResponse>("/auth/session", {
     headers: {
       Cookie: cookieStore.toString(),
     },
   });
-  return data;
+  return res;
 }
