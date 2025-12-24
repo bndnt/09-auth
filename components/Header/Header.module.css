@@ -7,6 +7,11 @@
   color: white;
 }
 
+.header li {
+  display: flex;
+  align-items: center;
+}
+
 .header a {
   text-decoration: none;
   color: white;

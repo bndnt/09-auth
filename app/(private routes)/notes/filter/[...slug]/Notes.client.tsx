@@ -1,8 +1,8 @@
 "use client";
 
-import css from "@/app/notes/Notes.module.css";
+import css from "@/app/(private routes)/notes/Notes.module.css";
 import { useState } from "react";
-import { fetchNotes } from "@/lib/api";
+import { fetchNotes } from "@/lib/api/clientApi";
 import { useQuery } from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
 import SearchBox from "@/components/SearchBox/SearchBox";

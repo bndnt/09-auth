@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import NotePreview from "@/components/NotePreview/NotePreview";
-import { fetchNoteById } from "@/lib/api";
+import { fetchNoteById } from "@/lib/api/clientApi";
 import { useRouter } from "next/navigation";
 interface NotePreviewClientProps {
   noteId: string;
