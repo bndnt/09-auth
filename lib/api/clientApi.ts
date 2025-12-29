@@ -32,32 +32,24 @@ export interface UpdateMe {
 export async function fetchNotes(
   page: number,
   search: string = "",
-
-  tag?: string
+  tag: string = ""
 ) {
-  if (tag === "All") {
-    tag = undefined;
-  }
-  //   tag: string = "all" // default "all"
-  // ): Promise<FetchNotesResponse> {
+  const normalizedTag =
+    tag.toLowerCase() === "all" || tag === "" ? undefined : tag;
 
-  //   const params: Record<string, any> = { page, search };
-  //   if (tag.toLowerCase() !== "all") {
-  //     params.tag = tag; //  tag if not "all"
-  //   }
   const options: NotesResponseOptions = {
     params: {
       search,
-      tag,
+      tag: normalizedTag,
       page,
       perPage: 12,
     },
   };
 
   const response = await serverApi.get<FetchNotesResponse>("/notes", options);
-
   return response.data;
 }
+
 export async function fetchNoteById(noteId: Note["id"]) {
   const { data } = await serverApi.get<Note>(`/notes/${noteId}`);
   return data;
@@ -107,6 +99,6 @@ export async function getMe(): Promise<User> {
 }
 
 export async function updateMe(payload: UpdateMe): Promise<User> {
-  const { data } = await serverApi.patch<User>("users/me", payload);
+  const { data } = await serverApi.patch<User>("/users/me", payload);
   return data;
 }

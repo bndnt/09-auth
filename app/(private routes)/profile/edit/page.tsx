@@ -13,7 +13,6 @@ const ProfileEdit = () => {
   const { user } = useAuthStore();
   const setUser = useAuthStore((state) => state.setUser);
   const [error, setError] = useState<string | null>(null);
-
   const { mutate, isPending } = useMutation({
     mutationFn: updateMe,
     onSuccess: (updatedMe) => {
@@ -30,6 +29,14 @@ const ProfileEdit = () => {
       setError(message);
     },
   });
+  if (!user) {
+    return (
+      <main className={css.mainContent}>
+        <p>Loading...</p>
+      </main>
+    );
+  }
+
   async function handleSubmit(formData: FormData) {
     const username = formData.get("username") as string;
     if (!username) {
@@ -78,7 +85,7 @@ const ProfileEdit = () => {
               {isPending ? "Saving..." : "Save"}
             </button>
             <button
-              onClick={() => route.push("/profile")}
+              onClick={() => route.back()}
               type="button"
               className={css.cancelButton}
             >

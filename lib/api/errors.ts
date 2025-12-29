@@ -1,4 +1,4 @@
-import { ApiError } from "./api";
+import { AxiosError } from "axios";
 
 export function getApiErrorMessage(error: unknown): string {
   if (!error) return "Unknown error";
@@ -13,3 +13,16 @@ export function getApiErrorMessage(error: unknown): string {
     "Something went wrong"
   );
 }
+export type ApiErrorResponse = {
+  error?: string;
+  response?: {
+    message?: string;
+    validation?: {
+      body?: {
+        message?: string;
+      };
+    };
+  };
+};
+
+export type ApiError = AxiosError<ApiErrorResponse>;

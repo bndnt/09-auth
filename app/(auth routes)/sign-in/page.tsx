@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
 import { getApiErrorMessage } from "@/lib/api/errors";
 
-const SignUpPage = () => {
+const SignInPage = () => {
   const setUser = useAuthStore((store) => store.setUser);
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -72,4 +72,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default SignInPage;

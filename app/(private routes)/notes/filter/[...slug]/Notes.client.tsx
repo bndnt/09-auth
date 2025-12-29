@@ -31,8 +31,7 @@ const NotesClient = ({ filterTag }: NotesClientProps) => {
     Error
   >({
     queryKey: ["notes", search, page, filterTag],
-    queryFn: () =>
-      fetchNotes(page, search, filterTag === "all" ? undefined : filterTag),
+    queryFn: () => fetchNotes(page, search, filterTag ?? "all"),
     staleTime: 10000,
   });
 

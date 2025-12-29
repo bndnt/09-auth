@@ -3,7 +3,7 @@ import {
   HydrationBoundary,
   dehydrate,
 } from "@tanstack/react-query";
-import { fetchNoteById } from "@/lib/api/clientApi";
+import { fetchNoteByIdServer } from "@/lib/api/serverApi";
 import NoteDetailsClient from "./NoteDetails.client";
 import type { Metadata } from "next";
 
@@ -15,13 +15,14 @@ export const generateMetadata = async ({
   params,
 }: NoteDetailsProp): Promise<Metadata> => {
   const { id } = await params;
-  const note = await fetchNoteById(id);
+  const note = await fetchNoteByIdServer(id);
+
   return {
     title: `Note #${note.title}`,
-    description: `${note.content}`,
+    description: note.content,
     openGraph: {
       title: note.title,
-      description: `${note.content}`,
+      description: note.content,
       url: `https://08-zustand-valeriia-makushchenko.vercel.app/notes/${note.id}`,
       images: [
         {
@@ -34,12 +35,14 @@ export const generateMetadata = async ({
     },
   };
 };
+
 async function NoteDetails({ params }: NoteDetailsProp) {
   const queryClient = new QueryClient();
   const { id } = await params;
+
   await queryClient.prefetchQuery({
     queryKey: ["note", id],
-    queryFn: () => fetchNoteById(id),
+    queryFn: () => fetchNoteByIdServer(id),
   });
 
   return (
@@ -48,4 +51,5 @@ async function NoteDetails({ params }: NoteDetailsProp) {
     </HydrationBoundary>
   );
 }
+
 export default NoteDetails;

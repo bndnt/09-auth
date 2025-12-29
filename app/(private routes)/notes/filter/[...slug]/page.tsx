@@ -1,5 +1,5 @@
 import NotesClient from "./Notes.client";
-import { fetchNotes } from "@/lib/api/clientApi";
+import { fetchNoteServer } from "@/lib/api/serverApi";
 import {
   QueryClient,
   HydrationBoundary,
@@ -46,7 +46,7 @@ export default async function FilteredNotesPage({
 
   await queryClient.prefetchQuery({
     queryKey: ["notes", "", 1, tag],
-    queryFn: () => fetchNotes(1, "", tag === "all" ? undefined : tag),
+    queryFn: () => fetchNoteServer("", 1, tag === "all" ? undefined : tag),
   });
 
   return (
