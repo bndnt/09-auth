@@ -6,7 +6,7 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { updateMe } from "@/lib/api/clientApi";
-import { ApiError } from "@/app/api/api";
+import { ApiError } from "@/lib/api/errors";
 import Image from "next/image";
 const ProfileEdit = () => {
   const route = useRouter();
